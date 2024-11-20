@@ -69,8 +69,6 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                 agent_kwargs=agent_kwargs
             )
             response = agent.run(input={"similarity_search_term": data, "request_raw_question_input": data})
-            print(type(response))
-            # return response_json
             await websocket.send_json(response)
     except WebSocketDisconnect:
         logger.info("Client disconnected")
