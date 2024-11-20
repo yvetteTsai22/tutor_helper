@@ -108,12 +108,13 @@ class SuggestPayload(BaseModel):
         return self.description
 
 
-class AgentPayload(BaseModel):
+class AgentPayload(DefaultPayload):
     similarity_search_term: str
     request_raw_question_input: str
-    products: Optional[List[str]] = Field(
-        [], description="Products related to the question"
-    )
+    
+    @property
+    def text(self):
+        return self.similarity_search_term
 
 
 class GenerateSearchTermAndSearchPayload(DefaultPayload):
