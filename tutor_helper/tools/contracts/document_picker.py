@@ -76,7 +76,7 @@ class DocumentPickerTool(BaseTool, ABC):
 
     @abstractmethod
     def _get_matching_docs(
-        self, search_term: str, num_results: int
+        self, search_term: str, num_results: int,  **kwargs
     ) -> List[Document]:
         pass
     
@@ -154,3 +154,9 @@ EXPECTED ANSWER FORMAT: list of document ids comma separated (e.g. fd7e1b4893e04
         transformed_docs = self._transform_docs(selected_docs)
 
         return '```json{"docs":' + json.dumps(transformed_docs) + "}```"
+    
+    def from_description(self, description: str) -> List[Dict]:
+        docs = self._get_matching_docs(description, self.num_results)
+        docs =  self._transform_docs(docs)
+        docs = [dict(i,**{"id": i[self.id_key], "content": i["description"]}) for i in docs]
+        return docs
