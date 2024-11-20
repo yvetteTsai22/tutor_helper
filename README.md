@@ -49,3 +49,10 @@ The goal is to create a tool that can support a tutor in managing their teaching
    ```
 
 You should see the app in http://localhost:8501/.
+
+
+### Tests
+One can test the code from the UI or with simple tests with pytest.
+```
+python tests/test_fastapi.py
+```
