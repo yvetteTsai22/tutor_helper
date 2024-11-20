@@ -6,7 +6,16 @@ from tutor_helper.schema.payload import (
 from tutor_helper.tools.search.parallel_search import ParallelSearch
 from tutor_helper.tools.search.search_term import SearchTerm
 
+from tutor_helper.agents.tutor_assistant.base import (
+    chat_agent,
+)
+from tutor_helper.agents.tutor_assistant.toolkit import SimplifiedToolkit
+from tutor_helper.common.llms import LlmLoader
+from tutor_helper.prompts.templates.chat_agent import ChatResponseWithKB
+from tutor_helper.output_parsers.agent_parser import NewAgentOutputFixingParser
 
+
+import json
 import logging
 logger = logging.getLogger(__name__)
 
@@ -37,6 +46,31 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     try:
         while True:
             data = await websocket.receive_text()
-            await websocket.send_text(f"Message text was: {data}")
+            logger.info(f"Client sent: {data}")
+            # prepare tools
+            toolkit = SimplifiedToolkit()
+
+            # prepare llm
+            chat_model = LlmLoader.create_chat_llm(
+                model=LlmLoader.DEPLOYMENT_35_TURBO_LG, temperature=0.5, top_p=0.5
+            )
+            agent_kwargs = {
+                "prefix": ChatResponseWithKB.SYSTEM_MESSAGE_WITH_TOOLS_PREFIX,
+                "format_instructions": ChatResponseWithKB.FORMAT_INSTRUCTIONS_FOR_AGENT,
+                "output_parser": NewAgentOutputFixingParser(),
+                "input_variables": ChatResponseWithKB.INPUT_VARIABLES,
+                "return_intermediate_steps": True,
+            }
+            # Initialize the agent with the tools and language model
+            agent = chat_agent(
+                llm=chat_model, 
+                toolkit=toolkit, 
+                verbose=True, 
+                agent_kwargs=agent_kwargs
+            )
+            response = agent.run(input={"similarity_search_term": data, "request_raw_question_input": data})
+            print(type(response))
+            # return response_json
+            await websocket.send_json(response)
     except WebSocketDisconnect:
         logger.info("Client disconnected")
