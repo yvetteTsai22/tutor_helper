@@ -3,6 +3,7 @@ from tutor_helper.tools.contracts.document_picker import DocumentPickerTool
 from typing import List, Dict, Optional
 from langchain.schema import Document
 import json
+
 class DuckDuckGoSearch(DocumentPickerTool):
     DocumentPickerTool.initialize_formats()
 
@@ -24,7 +25,7 @@ class DuckDuckGoSearch(DocumentPickerTool):
     }
 
     def _get_matching_docs(
-        self, search_term: str, num_results: int
+        self, search_term: str, num_results: int=8, **kwargs
     ) -> List[Document]:
         
         search = DuckDuckGoSearchResults(output_format="list", num_results=num_results)
@@ -37,11 +38,10 @@ class DuckDuckGoSearch(DocumentPickerTool):
             )
             for doc in search_results
         ]
-    
 
     def _transform_docs(self, docs: List) -> List[Dict]:
         return [
-            {
+            {   
                 "tool": self.name,
                 "display_name": self.display_name,
                 "title": doc.metadata[self.index_fields["title"]],
