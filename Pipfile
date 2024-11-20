@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+langchain = "*"
+tiktoken = "*"
+uvicorn = "*"
+websockets = "*"
+websocket-client = "*"
+streamlit = "*"
+vistir = "*"
+langchain-community = "*"
+openai = "*"
+tutor-helper = {file = ".", editable = true}
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
