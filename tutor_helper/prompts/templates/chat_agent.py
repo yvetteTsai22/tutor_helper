@@ -126,7 +126,7 @@ class ChatResponseWithKB:
     {{{{
     "action": "Final Answer",
     "action_input": {{{{
-            "content": string  // the markdown format answer to the question
+            "content": string  // the markdown format answer to the question, properly formated, reader-friendly, provide reference in the content
         }}}}
     }}}}
     ```"""
