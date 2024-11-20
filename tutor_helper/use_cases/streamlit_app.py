@@ -38,7 +38,7 @@ session_id = st.session_state['session_id']  # Use the stored session ID
 # Create chat interface
 if 'messages' not in st.session_state:
     st.session_state['messages'] = [
-        {"role": "assistant", "content": "Greetings! I'm your assistant.\n Together we can craft any tutor classes you want."}
+        {"role": "assistant", "content": "Greetings! I'm your assistant. You can ask me questions."}
     ]
 
 # Display previous chat history
