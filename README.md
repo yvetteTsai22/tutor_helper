@@ -35,12 +35,12 @@ The goal is to create a tool that can support a tutor in managing their teaching
    ```
    cd tutor_helper/
    pipenv shell
-   pipenv install -r requirements.txt
-   pipenv install -e ./
+   export PYTHONTRACEMALLOC=1
+   pip install -r requirements.txt
+   pip install -e ./
    ```
 4. start fastAPI
    ```
-   cd tutor_helper/
    uvicorn tutor_helper.use_cases.fastapi:app --reload
    ```
 5. start strealit
