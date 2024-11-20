@@ -1,14 +1,12 @@
 import os
-
 BACKEND_URL = os.environ.get("BACKEND_URL") or "http://localhost:8000"
-
-
 
 import streamlit as st
 import asyncio
 import websockets
 import uuid
 import requests
+import json
 # Function to handle WebSocket communication with FastAPI
 async def send_message(session_id, message):
     uri = f"ws://{BACKEND_URL}/ws/{session_id}"  # Adjust the URL if needed
@@ -58,12 +56,12 @@ if user_message:
     
     # Send the user message to the WebSocket backend and get the response
     bot_response = run_asyncio_loop(session_id, user_message)
-    
+    bot_response = json.loads(bot_response)
     # Add the bot response to the chat history
-    st.session_state['messages'].append({"role": "assistant", "content": bot_response})
+    st.session_state['messages'].append({"role": "assistant", "content": bot_response["content"]})
     
     # Display the latest chat messages from asstistant
-    st.chat_message("assistant").markdown(bot_response)
+    st.chat_message("assistant").markdown(bot_response["content"])
 
 
 # Function to search for tutor terms via FastAPI
